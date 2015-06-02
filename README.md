@@ -104,14 +104,14 @@ CREATE TABLE `phones` (
 ### Preprocessing
 Given SQL data in the above format, the following combines doctors, shifts, phones and wifi scans.
 
-1. Configure analysis5ShiftAndDoctorSpecific.sql to be particular shift/doctor/phone of interest. Note this can be modified to work with all doctors and shifts.
+1. Configure the MySql script [analysis5ShiftAndDoctorSpecific.sql](https://github.com/pszjmb1/waywardWifiAnalysis/blob/master/analysis5ShiftAndDoctorSpecific.sql) to be particular shift/doctor/phone of interest. Note this can be modified to work with all doctors and shifts.
 2. Run analysis5ShiftAndDoctorSpecific
 
 ### Place finding
 This still incomplete. Two script files are given with different outcomes:
 
 	I. Neighbour build up in time (note that dissimilar items may be connected by others that they match)
-		A. Run placeprints.py
+		A. Run the Python script  [placeprints.py](https://github.com/pszjmb1/waywardWifiAnalysis/blob/master/placeprints.py)
 			- Note: you should first configure the appropriate THRESHOLD and FILENAME values in placeprints.py
 		B. Remove duplicates from OUTPUTFILENAME file and sort by time ascending (todo: update the output routine to automatically output this way)
 			- Here I just copy the contents of OUTPUTFILENAME into Excel and do the following:
@@ -125,5 +125,5 @@ This still incomplete. Two script files are given with different outcomes:
 			a. Select the columns in the table from step 5.
 			b. Select 2D line chart from the Insert line chart tab
 	II. Combinatoric approach
-		A. Run jaccardOnSQL.r
+		A. Run the R script [jaccardOnSQL.r](https://github.com/pszjmb1/waywardWifiAnalysis/blob/master/jaccardOnSQL.r)
 			- See testMultidimensionalScalingOfDissimilarityMatrix() for example usage
