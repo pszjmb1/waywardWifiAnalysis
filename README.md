@@ -10,7 +10,7 @@ The goal of this analysis is to better inform what doctors are doing on their sh
 Usage Instructions
 ------------------
 ### Setup
-This analysis works with SQL data in the following format:
+This analysis works with SQL data in the following formats. Note data protection prevents us from including real data.
 
 #### Wifi scans table
 ##### Description
