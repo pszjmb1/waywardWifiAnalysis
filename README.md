@@ -103,6 +103,7 @@ CREATE TABLE `phones` (
 
 ### Preprocessing
 Given SQL data in the above format, the following combines doctors, shifts, phones and wifi scans.
+
 1. Configure analysis5ShiftAndDoctorSpecific.sql to be particular shift/doctor/phone of interest. Note this can be modified to work with all doctors and shifts.
 2. Run analysis5ShiftAndDoctorSpecific
 
