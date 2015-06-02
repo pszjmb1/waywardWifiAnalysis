@@ -108,3 +108,22 @@ Given SQL data in the above format, the following combines doctors, shifts, phon
 2. Run analysis5ShiftAndDoctorSpecific
 
 ### Place finding
+This still incomplete. Two script files are given with different outcomes:
+
+	I. Neighbour build up in time (note that dissimilar items may be connected by others that they match)
+		A. Run placeprints.py
+			- Note: you should first configure the appropriate THRESHOLD and FILENAME values in placeprints.py
+		B. Remove duplicates from OUTPUTFILENAME file and sort by time ascending (todo: update the output routine to automatically output this way)
+			- Here I just copy the contents of OUTPUTFILENAME into Excel and do the following:
+			i. Select the two columns of data
+			ii. Select the Data tab
+			iii. Click Remove Duplicates
+			iv. Make a table from the two columns
+			v. Sort asc on the time column -- NOTE: Be careful when reordering data from shifts that cross date boundaries (e.g. start day1 23:30, end day 2 02:30)
+		C. Visualise the two columns
+			- Here I've been using Excel again:
+			a. Select the columns in the table from step 5.
+			b. Select 2D line chart from the Insert line chart tab
+	II. Combinatoric approach
+		A. Run jaccardOnSQL.r
+			- See testMultidimensionalScalingOfDissimilarityMatrix() for example usage
