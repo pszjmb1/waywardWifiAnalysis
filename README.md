@@ -42,18 +42,18 @@ Hospitals with wireless working systems are able to submit jobs to doctors for t
 ##### SQL create script
 ```SQL
 CREATE TABLE `han` (
-  `timeof_complete` int(11) NOT NULL,
-  `timeof_submit` int(11) NOT NULL,
-  `timeof_accept` int(11) NOT NULL,
+  `timeof_complete` int(11) NOT NULL,                             -- When the doctor marks the job as complete
+  `timeof_submit` int(11) NOT NULL,                               -- When a job is submitted to a doctor
+  `timeof_accept` int(11) NOT NULL,                               -- When the doctor has accepted to do the submitted job
   `duration_max_accept` int(3) NOT NULL,
   `duration_min_accept` int(3) NOT NULL,
   `duration_submit` int(3) NOT NULL,
-  `priority` int(1) NOT NULL,
-  `ward` varchar(20) NOT NULL,
-  `category` varchar(150) NOT NULL,
-  `close_reason` varchar(50) NOT NULL,
-  `staff_group` varchar(10) NOT NULL,
-  `name` varchar(6) NOT NULL,
+  `priority` int(1) NOT NULL ,                                    -- The importance of a job
+  `ward` varchar(20) NOT NULL,                                    -- The hospital ward that the job takes place on 
+  `category` varchar(150) NOT NULL,                               -- Category of job
+  `close_reason` varchar(50) NOT NULL,                            -- Why the doctor closed the job
+  `staff_group` varchar(10) NOT NULL,                             -- Type of doctor performing the job
+  `name` varchar(6) NOT NULL,                                     -- Anonymous identifier of the doctor
   `indx` int(11) NOT NULL AUTO_INCREMENT,
   UNIQUE KEY `indx` (`indx`),
   UNIQUE KEY `indx2` (`timeof_submit`,`timeof_complete`,`name`),
