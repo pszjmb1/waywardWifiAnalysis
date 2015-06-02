@@ -62,3 +62,42 @@ CREATE TABLE `han` (
   KEY `timeof_submit_3` (`timeof_submit`,`timeof_complete`)
 ) ENGINE=MyISAM AUTO_INCREMENT=767 DEFAULT CHARSET=utf8;
 ```
+#### Shifts table
+##### Description
+The shift list of data recordings including shift start and end times.
+
+##### SQL create script
+```SQL
+CREATE TABLE `shifts` (
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) DEFAULT NULL,
+  `shiftname` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`starttime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+#### Dr Shift Table
+##### Description
+Recording of what shift a doctor was on and what phone (tattooNo) was used to log their Wifi scans.
+##### SQL create script
+```SQL
+CREATE TABLE `drshift` (
+  `iddrshift` int(11) NOT NULL AUTO_INCREMENT,
+  `hash` varchar(45) DEFAULT NULL,              -- Anonymous identifier of the doctor
+  `shift` varchar(45) DEFAULT NULL,             -- Shift name
+  `tattooNo` int(11) DEFAULT NULL,              -- phone id
+  PRIMARY KEY (`iddrshift`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+```
+#### Dr Shift Table
+##### Description
+Recording of what shift a doctor was on and what phone (tattooNo) was used to log their Wifi scans.
+##### SQL create script
+```SQL
+CREATE TABLE `phones` (
+  `phone_name` varchar(45) NOT NULL,            -- phone id
+  `phone_imei` varchar(45) NOT NULL,            -- corresponds to scans.imei
+  PRIMARY KEY (`phone_imei`),
+  UNIQUE KEY `phone_name` (`phone_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
