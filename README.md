@@ -88,9 +88,9 @@ CREATE TABLE `drshift` (
   PRIMARY KEY (`iddrshift`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 ```
-#### Dr Shift Table
+#### Phones Table
 ##### Description
-Recording of what shift a doctor was on and what phone (tattooNo) was used to log their Wifi scans.
+The list of phones used for Wifi recording
 ##### SQL create script
 ```SQL
 CREATE TABLE `phones` (
