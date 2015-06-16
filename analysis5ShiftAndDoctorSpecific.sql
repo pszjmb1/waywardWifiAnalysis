@@ -5,8 +5,8 @@ SET @numShifts=(
 );
 SET @shiftName=(
 	SELECT DISTINCT `shift` FROM drshift
-	ORDER BY `shift`
-	LIMIT 1 OFFSET 2		# Change the OFFSET value if a different shift is desired.
+	ORDER BY `iddrshift`
+	LIMIT 1 OFFSET 0		# Change the OFFSET value if a different shift is desired.
 );
 SET @numDoctors=(
 	SELECT COUNT(`hash`) FROM drshift
@@ -30,6 +30,9 @@ SET @doctorIMEI=(
 	FROM wayward.drshift LEFT JOIN phones ON  drshift.`tattooNo` = phones.`phone_name`
 	WHERE `hash`= @doctor AND `shift`=@shiftName
 );
+# Many doctors start working before their official start time and end after their official end time. 
+# Here we use an offset of 10800 seconds (3 hours) to account for the discrepancies.
+SET @shiftOffset=10800;	
 
 /*
 1. In the first phase we take a set of WiFi visibility observations
@@ -42,9 +45,9 @@ DROP TEMPORARY TABLE IF EXISTS accesspointsPerEpoch;
 CREATE TEMPORARY TABLE accesspointsPerEpoch AS  ( 
 	SELECT DISTINCT `time`, FROM_UNIXTIME(`time`,'%W %d %M %Y') AS rdate, FROM_UNIXTIME(`time`,'%H:%i') AS rtime, count(DISTINCT ap_id) as numapids, GROUP_CONCAT(DISTINCT ap_id ORDER BY ap_id) as apids
 	FROM scans
-	WHERE `time` >= @shiftstart AND `time` <= @shiftend #sunday night 1 shift
+	WHERE `time` >= (@shiftstart - @shiftOffset) AND `time` <= (@shiftend + @shiftOffset)
 	AND `imei` =  @doctorIMEI
-	GROUP BY rtime#,imei
+	GROUP BY rtime
 	ORDER BY `time`
 );
 #660 row(s)
@@ -64,8 +67,8 @@ CREATE TABLE possibleLocs AS  (
 	count(DISTINCT han.`ward`) as numwards, GROUP_CONCAT(DISTINCT han.`ward` ORDER BY  han.`ward`) AS wards, apids
 	FROM accesspointsPerEpoch
 	RIGHT JOIN han
-		ON `timeof_submit` <= time AND `timeof_complete` > time +59
-		#Whether or not to include the doctor is a question...
+		ON `timeof_accept` <= time AND `timeof_complete` > time	+ 59	# 59 is used here because we are interested in completions within a minute from the given second
+		AND name=@doctor
 	GROUP BY rtime
 	ORDER BY `time`
 );
