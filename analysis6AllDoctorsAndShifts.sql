@@ -82,18 +82,6 @@ ALTER TABLE possibleLocs
 ALTER TABLE possibleLocs
   ADD PRIMARY KEY (`doctor`, `time`);
 
-SET @doctor=(
-	SELECT `hash` FROM drshift WHERE `shift` = @shiftName
-	ORDER BY `hash`
-	LIMIT 1 OFFSET 1		# Change the OFFSET value if a different doctor is desired for the same shift.
-);
-SET @doctorIMEI=(
-	SELECT phones.phone_imei AS 'imei'
-	FROM wayward.drshift LEFT JOIN phones ON  drshift.`tattooNo` = phones.`phone_name`
-	WHERE `hash`= @doctor AND `shift`=@shiftName
-);
-
-
 DROP PROCEDURE IF exists load_dr_data;
 delimiter #
 CREATE PROCEDURE load_dr_data()
@@ -102,7 +90,7 @@ BEGIN
 DECLARE numShifts INT unsigned default (SELECT COUNT(DISTINCT `shift`) FROM drshift);
 DECLARE v_counterShift INT unsigned default 0;
 DECLARE v_counterDoctor INT unsigned default 0;
-DECLARE shiftName VARCHAR(45) default 0;
+DECLARE shiftName1 VARCHAR(45) default 0;
 DECLARE doctor VARCHAR(45) default 0;
 DECLARE doctorIMEI VARCHAR(45) default 0;
 DECLARE numSecs INT unsigned default 59;
@@ -113,14 +101,14 @@ DECLARE shiftOffset INT(11) default 10800;	-- Should be same value as @shiftOffs
   TRUNCATE TABLE possibleLocs;
   START TRANSACTION;
   WHILE v_counterShift < numShifts do
-	SET shiftName = ( SELECT DISTINCT `shift` FROM drshift ORDER BY `iddrshift` LIMIT 1 OFFSET v_counterShift );
-	SET shiftstart = (SELECT `starttime` FROM wayward.shifts WHERE `shiftname` = shiftName LIMIT 1);
-	SET shiftend=(SELECT `endtime` FROM wayward.shifts	WHERE `shiftname` = shiftName LIMIT 1);
-	SELECT shiftName,shiftstart, shiftend; -- !!!!!!!! This seems to not be updating correctly; Shift start and end are the same in each loop!!!
-    WHILE v_counterDoctor < (SELECT COUNT(`hash`) FROM drshift WHERE `shift` = shiftName) do
-        SET doctor = (SELECT `hash` FROM drshift WHERE `shift` = shiftName ORDER BY `hash` LIMIT 1 OFFSET v_counterDoctor);
+	SET shiftName1 = ( SELECT DISTINCT `shift` FROM drshift ORDER BY `iddrshift` LIMIT 1 OFFSET v_counterShift );
+	SET shiftstart = (SELECT `starttime` FROM wayward.shifts WHERE `shiftname` = shiftName1 LIMIT 1);
+	SET shiftend=(SELECT `endtime` FROM wayward.shifts	WHERE `shiftname` = shiftName1 LIMIT 1);
+	SELECT shiftName1,shiftstart, shiftend;
+    WHILE v_counterDoctor < (SELECT COUNT(`hash`) FROM drshift WHERE `shift` = shiftName1) do
+        SET doctor = (SELECT `hash` FROM drshift WHERE `shift` = shiftName1 ORDER BY `hash` LIMIT 1 OFFSET v_counterDoctor);
         SET doctorIMEI = (SELECT phones.phone_imei AS 'imei' FROM wayward.drshift LEFT JOIN phones ON  drshift.`tattooNo` = phones.`phone_name`
-			WHERE `hash`= doctor AND `shift`=shiftName);
+			WHERE `hash`= doctor AND `shift`=shiftName1);
 
 		DROP TEMPORARY TABLE IF EXISTS accesspointsPerEpoch;
 		CREATE TEMPORARY TABLE accesspointsPerEpoch AS  ( 
@@ -133,7 +121,7 @@ DECLARE shiftOffset INT(11) default 10800;	-- Should be same value as @shiftOffs
 		);
 
 		INSERT INTO possibleLocs (`doctor`,`time`,`doctorIMEI`,`shiftName`,`rdate`,`rtime`,`numapids`,`numwards`,`wards`,`apids`)
-			SELECT DISTINCT doctor, `time`, doctorIMEI, shiftName, rdate, rtime, numapids,
+			SELECT DISTINCT doctor, `time`, doctorIMEI, shiftName1, rdate, rtime, numapids,
 			count(DISTINCT han.`ward`) as numwards, GROUP_CONCAT(DISTINCT han.`ward` ORDER BY  han.`ward`) AS wards, apids
 			FROM accesspointsPerEpoch
 			RIGHT JOIN han
