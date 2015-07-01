@@ -97,7 +97,7 @@ DECLARE numSecs INT unsigned default 59;
 DECLARE shiftstart INT(11) default 0;
 DECLARE shiftend INT(11) default 0;
 DECLARE shiftOffset INT(11) default 10800;	-- Should be same value as @shiftOffset above!
-
+ 
   TRUNCATE TABLE possibleLocs;
   START TRANSACTION;
   WHILE v_counterShift < numShifts do
