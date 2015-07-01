@@ -77,7 +77,7 @@ DELETE FROM possibleLocs WHERE (`time` IS NULL);
 SET SQL_SAFE_UPDATES = 1;
 ALTER TABLE possibleLocs
   MODIFY `doctor` varchar(45),
-  ADD COLUMN `apGroupId` MEDIUMINT AFTER `apids`;
+  ADD COLUMN `apGroupId` LONGTEXT AFTER `apids`;
 
 ALTER TABLE possibleLocs
   ADD PRIMARY KEY (`doctor`, `time`);
@@ -135,6 +135,10 @@ DECLARE shiftOffset INT(11) default 10800;	-- Should be same value as @shiftOffs
 	SET v_counterDoctor = 0;
 	SET v_counterShift=v_counterShift+1;
   END WHILE;
+  -- Update all possibleLocs with a single ward and add appropriate values to apGroup
+  SET SQL_SAFE_UPDATES = 0;
+  UPDATE wayward.possiblelocs SET apGroupId = wards WHERE numwards = 1; 
+  SET SQL_SAFE_UPDATES = 1;
   COMMIT;
 END #
 
