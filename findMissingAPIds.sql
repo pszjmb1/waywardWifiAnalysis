@@ -22,12 +22,14 @@ BEGIN
 			(SELECT apids FROM wayward.possiblelocs WHERE `doctor` = doctor1 AND `time` = aTime)
 			AND apGroupId IS NOT NULL LIMIT 1);
 		-- SELECT v_counterMissingRows, doctor1, aTime, groupId;
-		SET SQL_SAFE_UPDATES = 0;
-			UPDATE possiblelocs
-			SET apGroupId=groupId	
-			WHERE `doctor`=doctor1 AND `time`=aTime;
-		SET SQL_SAFE_UPDATES = 1;
-
+		IF groupId IS NOT NULL
+		THEN
+			SET SQL_SAFE_UPDATES = 0;
+				UPDATE possiblelocs
+				SET apGroupId=groupId, apGroupIdSimilarity=1	
+				WHERE `doctor`=doctor1 AND `time`=aTime;
+			SET SQL_SAFE_UPDATES = 1;
+		END IF;
 		-- SELECT v_counterMissingRows,numMissingRows-v_counterMissingRows,doctor1,aTime,groupId
 		-- INTO OUTFILE 'C:\\Windows\\Temp\\jmbout.txt';
 		SET v_counterMissingRows=v_counterMissingRows+1;

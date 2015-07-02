@@ -77,7 +77,8 @@ DELETE FROM possibleLocs WHERE (`time` IS NULL);
 SET SQL_SAFE_UPDATES = 1;
 ALTER TABLE possibleLocs
   MODIFY `doctor` varchar(45),
-  ADD COLUMN `apGroupId` LONGTEXT AFTER `apids`;
+  ADD COLUMN `apGroupId` LONGTEXT AFTER `apids`,
+  ADD COLUMN `apGroupIdSimilarity` DECIMAL(3,2) AFTER `apGroupId`;
 
 ALTER TABLE possibleLocs
   ADD PRIMARY KEY (`doctor`, `time`);
