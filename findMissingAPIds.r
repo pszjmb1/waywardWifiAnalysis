@@ -72,6 +72,7 @@ updatePossibleLocs <- function(userIn = 'root', passwordIn, hostIn = 'localhost'
   #   Selected data
   ''
   sql <- paste ("UPDATE possiblelocs SET apGroupId='",groupIdIn,"', apGroupIdSimilarity=",format(apGroupIdSimilarityIn,digits=2)," WHERE `doctor`='",doctor1,"' AND `time`='",aTime,"';",sep="")
+  write(sql, file = "./updates.txt", append = TRUE)
   print(sql)
   data <- fetchDataFromSql(userIn, passwordIn, hostIn, dbnameIn, sql)
   data
