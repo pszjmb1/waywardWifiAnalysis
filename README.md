@@ -100,7 +100,14 @@ CREATE TABLE `phones` (
   UNIQUE KEY `phone_name` (`phone_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
+## New Form of Processing
+Given SQL data in the above format, the following combines doctors, shifts, phones and wifi scans:
+1. Run analysis6ShiftAndDoctorSpecific 
+2. Run checkWardJobsForDoctors.sql
+3. Run updateApGroupIdsDatasetFromSimilarAps() from findMissingAPIds2.r
 
+## Old Form of Processing
+Ignore this if using he new form of processing
 ### Preprocessing
 Given SQL data in the above format, the following combines doctors, shifts, phones and wifi scans.
 
@@ -108,7 +115,7 @@ Given SQL data in the above format, the following combines doctors, shifts, phon
 2. Run analysis5ShiftAndDoctorSpecific
 
 ### Place finding
-This still incomplete. Two script files are given with different outcomes:
+This is still incomplete. Two script files are given with different outcomes:
 
 	I. Neighbour build up in time (note that dissimilar items may be connected by others that they match)
 		A. Run the Python script  [placeprints.py](https://github.com/pszjmb1/waywardWifiAnalysis/blob/master/placeprints.py)
@@ -127,3 +134,4 @@ This still incomplete. Two script files are given with different outcomes:
 	II. Combinatoric approach
 		A. Run the R script [jaccardOnSQL.r](https://github.com/pszjmb1/waywardWifiAnalysis/blob/master/jaccardOnSQL.r)
 			- See testMultidimensionalScalingOfDissimilarityMatrix() for example usage
+	III. 
