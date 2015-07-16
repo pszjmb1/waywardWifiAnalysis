@@ -102,6 +102,7 @@ CREATE TABLE `phones` (
 ```
 ## New Form of Processing
 Given SQL data in the above format, the following combines doctors, shifts, phones and wifi scans:
+
 1. Run analysis6ShiftAndDoctorSpecific 
 2. Run checkWardJobsForDoctors.sql
 3. Run updateApGroupIdsDatasetFromSimilarAps() from findMissingAPIds2.r
