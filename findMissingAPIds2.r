@@ -90,7 +90,15 @@ updatePossibleLocs <- function(userIn = 'root', passwordIn, hostIn = 'localhost'
   # Returns:
   #   Selected data
   
-  sql <- paste ("UPDATE possiblelocs SET apGroupId='",groupIdIn,"', apGroupIdSimilarity=",format(apGroupIdSimilarityIn,digits=2)," WHERE `doctor`='",doctor1,"' AND `time`='",aTime,"';",sep="")
+  sql <- paste ("SELECT COUNT(*) FROM han WHERE `name` = '",doctor1,"' AND timeof_accept <= '",aTime,"' AND timeof_complete >= ",aTime," + 60 AND close_reason='Completed'",sep="") 
+  data <- fetchDataFromSql(userIn, passwordIn, hostIn, dbnameIn, sql)
+  if(data == 1){
+    sql <- paste ("SELECT indx FROM han WHERE `name` = '",doctor1,"' AND timeof_accept <= '",aTime,"' AND timeof_complete >= ",aTime," + 60 AND close_reason='Completed'",sep="")
+    data <- fetchDataFromSql(userIn, passwordIn, hostIn, dbnameIn, sql)
+  } else {
+    data <- 0
+  }
+  sql <- paste ("UPDATE possiblelocs SET apGroupId='",groupIdIn,"', apGroupIdSimilarity=",format(apGroupIdSimilarityIn,digits=2),",hanIndx='",data,"' WHERE `doctor`='",doctor1,"' AND `time`='",aTime,"';",sep="")
   write(sql, file = "./updates.txt", append = TRUE)
   print(sql)
   data <- fetchDataFromSql(userIn, passwordIn, hostIn, dbnameIn, sql)
@@ -121,7 +129,7 @@ updateApGroupIdsDatasetFromSimilarAps <- function(userIn = 'root', hostIn = 'loc
   
   # For each missing data row, and add update the corresponding SQL table with the most similar apGroup above a given threshold
   for(missingRow in 1:nrow(missingApGroupIdsDataset)){
-    print(paste(Sys.time(),"> missingRow: ", missingRow))
+    print(paste(Sys.time(),"> missingRow: ", missingRow, " out of: ",nrow(missingApGroupIdsDataset)," missing rows."))
     for(row in 1:nrow(completeApGroupIdsDataset)){   
       #print(row)
       apidsForMissingGroup <- missingApGroupIdsDataset$apids[missingRow]
